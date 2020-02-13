@@ -53,5 +53,7 @@
 			class="team.javaSpirit.teachingAssistantPlatform.entity.ShareResource" />
 		<mapping
 			class="team.javaSpirit.teachingAssistantPlatform.entity.FeedBack" />
+		<mapping
+			class="team.javaSpirit.teachingAssistantPlatform.entity.Score" />
 	</session-factory>
 </hibernate-configuration>

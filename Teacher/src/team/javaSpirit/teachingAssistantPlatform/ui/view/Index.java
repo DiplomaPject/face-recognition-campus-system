@@ -10,6 +10,8 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ import team.javaSpirit.teachingAssistantPlatform.entity.Teacher;
 import team.javaSpirit.teachingAssistantPlatform.feedback.service.FeedBackServiceImpl;
 import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.Service;
 import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.ServiceOperationServiceImpl;
+import team.javaSpirit.teachingAssistantPlatform.studentScore.service.StudentScoreService;
 import team.javaSpirit.teachingAssistantPlatform.studentSignIn.service.StudentSignInServiceImpl;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.CheckBoxMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.DeleteMouseListener;
@@ -56,6 +59,7 @@ import team.javaSpirit.teachingAssistantPlatform.ui.event.RandomCallMouseListene
 import team.javaSpirit.teachingAssistantPlatform.ui.event.ResourceMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.ShareResourceMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.StuShowActionListener;
+import team.javaSpirit.teachingAssistantPlatform.ui.event.StudentScoreMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.StudentShowMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.StudentSignMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.UploadMouseListener;
@@ -85,7 +89,7 @@ public class Index extends JFrame {
 	private JTable table_1;
 	/* 显示学生请假情况的标签 */
 	private JTable table_2;
-	/* 远程控制菜单 */
+	/* 成绩录入菜单 */
 	private JPanel menu1;
 	/* 录屏菜单 */
 	private JPanel menu2;
@@ -111,6 +115,16 @@ public class Index extends JFrame {
 	private IndexActionListener event;
 	/* 最小化窗口对象 */
 	private Suspensionbox suspensionbox;
+	/*成绩对应的学号*/
+	public static String sid;
+	
+	public String getSid() {
+		return sid;
+	}
+	
+	public void setSid(String sid) {
+		this.sid = sid;
+	}
 
 	/**
 	 * <p>
@@ -139,15 +153,15 @@ public class Index extends JFrame {
 	 * Title: setRemotecontrol
 	 * </p>
 	 * <p>
-	 * Description: 设置远程控制菜单面板，有标记图和下拉菜单。
+	 * Description: 设置成绩录入菜单面板
 	 * </p>
 	 */
 	public void setRemotecontrol() {
-		// 创建一个远程控制面板对象
+		// 创建一个成绩录入面板对象
 		menu1 = new JPanel();
 		menu1.setLayout(null);
 		menu1.setForeground(Color.WHITE);
-		menu1.setBounds(19, 18, 90, 110);
+		menu1.setBounds(19, 18, 88, 99);
 		menu1.setBorder(null);
 		menu1.setOpaque(false);
 		JLabel label = new JLabel();
@@ -156,31 +170,18 @@ public class Index extends JFrame {
 		// 面板添加图片标签label
 		menu1.add(label);
 		// 按钮
-		JButton button_1 = new JButton("远程监控");
-		// 添加事件
-		button_1.addActionListener(event);
-		button_1.setForeground(new Color(100, 149, 237));
-		button_1.setFont(new Font("宋体", Font.BOLD, 18));
-		button_1.setBorder(null);
-		button_1.setBackground(Color.WHITE);
-		button_1.setBounds(0, 70, 88, 16);
-		menu1.add(button_1);
-		// 下拉菜单，里面的值是String类型
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setBounds(0, 94, 88, 16);
-		comboBox.setEditable(true);
-		comboBox.setEnabled(true);
-		// 为下拉菜单添加选项
-		comboBox.addItem("请选择......");
-		comboBox.addItem("开启");
-		comboBox.addItem("关闭");
-		comboBox.addItem("开启共享");
-		comboBox.addItem("关闭共享");
-		// 监听下拉框的选择事件
-		comboBox.addItemListener(new MyItemListener(comboBox, service) {
-		});
-		// 面板添加下拉菜单comboBox
-		menu1.add(comboBox);
+		JButton button = new JButton("成绩录入");
+		button.setForeground(new Color(100, 149, 237));
+		button.setFont(new Font("宋体", Font.BOLD, 18));
+		button.setBorder(null);
+		button.setBackground(Color.WHITE);
+		button.setBounds(0, 70, 88, 16);
+		menu1.add(button);
+		
+		StudentScoreMouseListener stuScore = new StudentScoreMouseListener(this);
+		// 添加事件监听
+		menu1.addMouseListener(stuScore);
+		button.addMouseListener(stuScore);
 	}
 
 	/**
@@ -248,22 +249,22 @@ public class Index extends JFrame {
 		menu4.setOpaque(false);
 
 		JLabel label_6 = new JLabel("");
-		label_6.setIcon(new ImageIcon("image\\xsys.png"));
-		label_6.setBounds(13, 10, 60, 60);
+		label_6.setIcon(new ImageIcon("image\\sjdm.png"));
+		label_6.setBounds(13, 20, 60, 60);
 		menu4.add(label_6);
 		// 学生演示按钮
-		JButton button = new JButton("学生演示");
+		/*JButton button = new JButton("学生演示");
 		button.setForeground(new Color(100, 149, 237));
 		button.setFont(new Font("宋体", Font.BOLD, 18));
 		button.setBorder(null);
 		button.setBackground(Color.WHITE);
 		button.setBounds(0, 70, 88, 16);
-		menu4.add(button);
+		menu4.add(button);*/
 		// 事件对象
-		StudentShowMouseListener stuShow = new StudentShowMouseListener(this);
+		//StudentShowMouseListener stuShow = new StudentShowMouseListener(this);
 		// 添加事件监听
-		menu4.addMouseListener(stuShow);
-		button.addMouseListener(stuShow);
+		//menu4.addMouseListener(stuShow);
+		//button.addMouseListener(stuShow);
 	}
 
 	/**
@@ -283,7 +284,7 @@ public class Index extends JFrame {
 		menu5.setBorder(null);
 		menu5.setOpaque(false);
 		JLabel label_7 = new JLabel("");
-		label_7.setIcon(new ImageIcon("image\\sjdm.png"));
+		label_7.setIcon(new ImageIcon("image\\xsys.png"));
 		label_7.setBounds(13, 10, 60, 60);
 		menu5.add(label_7);
 		// 随机点名按钮
@@ -498,7 +499,7 @@ public class Index extends JFrame {
 	 * </p>
 	 */
 	public void topMenu() {
-		// 添加远程控制面板
+		// 添加成绩录入面板
 		this.setRemotecontrol();
 		// 签到菜单
 		this.setStusign();
@@ -605,7 +606,7 @@ public class Index extends JFrame {
 		lblNewLabel1.setFont(new Font("宋体", Font.BOLD, 20));
 		lblNewLabel1.setBounds(733, 40, 240, 26);
 		String tid = Constant.myTeacher.getTid();
-		System.out.println("tid:"+tid);
+		//System.out.println("tid:"+tid);
 		if (cs.findCurrentCourse(tid)) {
 			String cname = cs.findCname(Constant.cid);
 			lblNewLabel = new JLabel("第" + week + "周:" + cname + "课");
@@ -750,6 +751,108 @@ public class Index extends JFrame {
 		setGroupLayout();
 		// 内容设置，学生演示内容页，有小电脑和名字（学生按钮）
 		selectstuContent();
+	}
+	
+	/**
+	 * 
+	 * <p>
+	 * Title: selectstuScore
+	 * </p>
+	 * <p>
+	 * Description:中间内容页，显示成绩录入情况
+	 * </p>
+	 */
+	public void selectstuScore() {
+		// 成绩录入的服务
+		StudentScoreService ss = new StudentScoreService();
+		// 成绩录入的情况
+		List<Object[]> signStu = ss.courseStudent();
+		final Object[] columnNames = { "学号", "姓名", "科目", "成绩" };
+		int row = signStu.size();
+		Object[][] rowData = new Object[row][4];
+		Double s = 0.0;
+		String str = s+"";
+		int i = 0;
+		for (Object[] stu : signStu) {
+			rowData[i][0] = stu[0];
+			rowData[i][1] = stu[1];
+			rowData[i][2] = stu[2];
+			rowData[i][3] = stu[3];
+			i++;
+		}
+
+		table_1 = new JTable(rowData, columnNames);
+		// 设置table内容居中显示
+		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+		tcr.setHorizontalAlignment(SwingConstants.CENTER);
+		table_1.setDefaultRenderer(Object.class, tcr);
+		table_1.setBounds(1, 32, 900, 300);
+		table_1.setFont(new Font("宋体", Font.PLAIN, 16));
+		table_1.setRowHeight(50);// 设置每行的高度
+		table_1.setRowMargin(5);// 设置相邻两行单元格的距离
+		table_1.setShowHorizontalLines(true);// 是否显示水平的网格线
+		table_1.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent e) {//仅当鼠标单击时响应
+               //得到选中的行列的索引值
+              int r= table_1.getSelectedRow();
+              int c= table_1.getSelectedColumn();
+              if (c == 3) {
+            	  String sid= (String) table_1.getValueAt(r, 0);
+            	  setSid(sid);
+            	  //弹出输入框
+            	  Score score=new Score();
+          		  score.init();
+              } 
+            }
+        }); 
+		centerpl.setLayout(null);
+		centerpl.add(table_1);
+
+		JScrollPane scrollPane = new JScrollPane(table_1);
+		scrollPane.setBounds(1, 1, 909, 520);
+		scrollPane.setEnabled(false);
+		centerpl.add(scrollPane);
+
+		// 设置窗体大小
+		this.setBounds(0, 0, 1033, 600);
+		// 窗体大小不能改变
+		this.setResizable(false);
+		// 居中显示
+		this.setLocationRelativeTo(null);
+		// 设置图标
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("image\\logo1.png"));
+		// 窗体可见
+		this.setVisible(true);
+	}
+	
+	/**
+	 * 
+	 * <p>
+	 * Title: jumpScore
+	 * </p>
+	 * <p>
+	 * Description:跳转到成绩录入界面
+	 * </p>
+	 */
+	public void jumpScore() {
+		// 顶部菜单栏
+		topMenu();
+		// 左侧菜单栏
+		leftMenu();
+		// 设置背景图
+		setBackground();
+		// 设置布局方式为绝对定位
+		this.getContentPane().setLayout(null);
+		// 时间标志
+		setTime();
+		// 中间容器
+		centerPanel();
+		// 聊天窗口
+		//chatView();
+		// 布局设置
+		setGroupLayout();
+		// 内容设置
+		selectstuScore();
 	}
 
 	/**

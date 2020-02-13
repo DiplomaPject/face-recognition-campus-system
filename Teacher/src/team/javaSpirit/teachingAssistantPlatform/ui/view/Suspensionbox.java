@@ -17,11 +17,15 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
+import team.javaSpirit.teachingAssistantPlatform.common.Constant;
+import team.javaSpirit.teachingAssistantPlatform.course.service.CourseServiceImpl;
 import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.Service;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.MyItemListener;
+import team.javaSpirit.teachingAssistantPlatform.ui.event.StudentScoreMouseListener;
 
 public class Suspensionbox extends JFrame implements ActionListener {
 
@@ -109,7 +113,7 @@ public class Suspensionbox extends JFrame implements ActionListener {
 	 * Title: setRemotecontrol
 	 * </p>
 	 * <p>
-	 * Description: 设置远程控制菜单面板，有标记图和下拉菜单。
+	 * Description: 设置成绩录入菜单面板。
 	 * </p>
 	 */
 	public void setRemotecontrol() {
@@ -123,34 +127,21 @@ public class Suspensionbox extends JFrame implements ActionListener {
 		lblNewLabel.setBounds(24, 0, 71, 67);
 		menu1.add(lblNewLabel);
 
-		JButton btnNewButton = new JButton("远程控制");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		JButton button_1 = new JButton("成绩录入");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Index l = new Index();
+				l.jumpIndex();
+				setVisible(false);
+
 			}
 		});
-		btnNewButton.setOpaque(false);
-		btnNewButton.setBounds(0, 65, 120, 27);
-		btnNewButton.setForeground(new Color(100, 149, 237));
-		btnNewButton.setFont(new Font("宋体", Font.BOLD, 18));
-		btnNewButton.setBorder(null);
-		btnNewButton.setBackground(Color.WHITE);
-		menu1.add(btnNewButton);
-		// 下拉菜单，里面的值是String类型
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setBounds(10, 94, 96, 16);
-		comboBox.setEditable(true);
-		comboBox.setEnabled(true);
-		// 为下拉菜单添加选项
-		comboBox.addItem("请选择......");
-		comboBox.addItem("开启");
-		comboBox.addItem("关闭");
-		comboBox.addItem("开启共享");
-		comboBox.addItem("关闭共享");
-		// 监听下拉框的选择事件
-		comboBox.addItemListener(new MyItemListener(comboBox, service) {
-		});
-		// 面板添加下拉菜单comboBox
-		menu1.add(comboBox);
+		button_1.setForeground(new Color(100, 149, 237));
+		button_1.setFont(new Font("宋体", Font.BOLD, 18));
+		button_1.setBorder(null);
+		button_1.setBackground(null);
+		button_1.setBounds(0, 65, 120, 34);
+		menu1.add(button_1);
 	}
 
 	/**
@@ -240,24 +231,33 @@ public class Suspensionbox extends JFrame implements ActionListener {
 	 * Title: setStuzs
 	 * </p>
 	 * <p>
-	 * Description: 设置学生演示菜单面板，有标记图和按钮
+	 * Description: 设置课程名称
 	 * </p>
 	 */
 	public void setStuzs() {
 		// 学生演示菜单
 		JPanel menu4 = new JPanel();
 		menu4.setLayout(null);
-		menu4.setBounds(416, 13, 120, 123);
+		menu4.setBounds(550, 13, 120, 123);
 		menu4.setBorder(null);
 		menu4.setOpaque(false);
 		contentPane.add(menu4);
 
-		JLabel label_2 = new JLabel("");
-		label_2.setBounds(24, 0, 71, 67);
-		label_2.setIcon(new ImageIcon("image\\xsys.png"));
-		menu4.add(label_2);
+		JLabel lblNewLabel;
+		CourseServiceImpl cs = new CourseServiceImpl();
+		String tid = Constant.myTeacher.getTid();
+		if (cs.findCurrentCourse(tid)) {
+			String cname = cs.findCname(Constant.cid);
+			lblNewLabel = new JLabel(cname);
+		} else {
+			lblNewLabel = new JLabel("目前没课");
+		}
+		lblNewLabel.setBounds(10,20,100,60);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("宋体", Font.PLAIN, 18));
+		menu4.add(lblNewLabel);
 
-		JButton button_2 = new JButton("学生演示");
+		/*JButton button_2 = new JButton("学生演示");
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Index l = new Index();
@@ -271,7 +271,7 @@ public class Suspensionbox extends JFrame implements ActionListener {
 		button_2.setBorder(null);
 		button_2.setBackground(null);
 		button_2.setBounds(0, 65, 120, 34);
-		menu4.add(button_2);
+		menu4.add(button_2);*/
 
 	}
 
@@ -287,7 +287,7 @@ public class Suspensionbox extends JFrame implements ActionListener {
 		// 随机点名菜单
 		menu5 = new JPanel();
 		menu5.setLayout(null);
-		menu5.setBounds(550, 13, 120, 123);
+		menu5.setBounds(416, 13, 120, 123);
 		menu5.setForeground(Color.WHITE);
 		menu5.setBorder(null);
 		menu5.setOpaque(false);
@@ -295,7 +295,7 @@ public class Suspensionbox extends JFrame implements ActionListener {
 
 		JLabel label_3 = new JLabel("");
 		label_3.setBounds(24, 0, 71, 67);
-		label_3.setIcon(new ImageIcon("image\\sjdm.png"));
+		label_3.setIcon(new ImageIcon("image\\xsys.png"));
 		menu5.add(label_3);
 
 		JButton button_3 = new JButton("随机点名");

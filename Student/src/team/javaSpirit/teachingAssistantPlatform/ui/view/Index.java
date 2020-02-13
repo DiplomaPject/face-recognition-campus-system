@@ -27,6 +27,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -427,11 +428,11 @@ public class Index extends JFrame {
 	 * Title: setRemoteMenu
 	 * </p>
 	 * <p>
-	 * Description:设置远程监控菜单
+	 * Description:设置课堂反馈菜单
 	 * </p>
 	 */
 	public void setRemoteMenu() {
-		// 远程监控菜单容器
+		// 远程课堂反馈容器
 		JPanel menu2 = new JPanel() {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -444,13 +445,13 @@ public class Index extends JFrame {
 		menu2.setForeground(new Color(255, 255, 255));
 		menu2.setLayout(null);
 
-		// 远程监控图标
+		// 课堂反馈图标
 		JLabel lb2 = new JLabel("");
 		lb2.setBounds(13, 10, 60, 60);
 		menu2.add(lb2);
 		lb2.setIcon(new ImageIcon("image/menu2.jpg"));
-		// 远程监控按钮
-		JButton bt2 = new JButton("远程监控");
+		// 课堂反馈按钮
+		JButton bt2 = new JButton("课堂反馈");
 		bt2.setBounds(13, 70, 61, 17);
 
 		menu2.add(bt2);
@@ -585,7 +586,7 @@ public class Index extends JFrame {
 	 * Title: setRemote
 	 * </p>
 	 * <p>
-	 * Description:设置远程监控页面，向centerpl中添加控件，向contentpl中添加控件
+	 * Description:设置课堂反馈页面，向centerpl中添加控件，向contentpl中添加控件
 	 * </p>
 	 */
 	public void setRemote() {
@@ -601,7 +602,7 @@ public class Index extends JFrame {
 		closepl.setBounds(113, 14, 104, 30);
 		closepl.setLayout(null);
 
-		JLabel lblNewLabel_1 = new JLabel("远程共享");
+		JLabel lblNewLabel_1 = new JLabel("课堂反馈");
 		lblNewLabel_1.setForeground(SystemColor.textInactiveText);
 		lblNewLabel_1.setBounds(10, 5, 63, 23);
 		closepl.add(lblNewLabel_1);
@@ -614,13 +615,13 @@ public class Index extends JFrame {
 		closebt.setBorder(null);
 		centerpl.add(closepl);
 		// 向contentpl中添加控件
-		JButton remortbt = new JButton("开启远程连接");
-		remortbt.setForeground(SystemColor.textInactiveText);
-		remortbt.setFont(new Font("宋体", Font.PLAIN, 14));
-		remortbt.setBounds(66, 130, 129, 31);
+//		JButton remortbt = new JButton("开启远程连接");
+//		remortbt.setForeground(SystemColor.textInactiveText);
+//		remortbt.setFont(new Font("宋体", Font.PLAIN, 14));
+//		remortbt.setBounds(66, 130, 129, 31);
 		// 添加事件监听
-		remortbt.addActionListener(event);
-		contentpl.add(remortbt);
+//		remortbt.addActionListener(event);
+//		contentpl.add(remortbt);
 
 		JPanel chatpl = new JPanel();
 		chatpl.setBackground(SystemColor.inactiveCaption);
@@ -886,7 +887,7 @@ public class Index extends JFrame {
 			}
 		};
 		text.setBackground(null);
-		text.setForeground(new Color(173, 216, 230));
+		//text.setForeground(new Color(173, 216, 230));
 		text.setPreferredSize(new Dimension(700, 700));
 		scrollPane.setViewportView(text);
 		// 获取所有资源
@@ -899,10 +900,11 @@ public class Index extends JFrame {
 			jl.setFont(new Font("宋体", Font.BOLD, 14));
 			jl.setForeground(new Color(119, 136, 153));
 			jl.setHorizontalAlignment(SwingConstants.CENTER);
-			jl.setBounds(341, 20, 105, 26);
+			jl.setBounds(341, 50, 105, 26);
 			text.add(jl);
 		}else {
-			String[][] datas = new String[14][4];
+			int row = scorelist.size();
+			String[][] datas = new String[row][4];
 			int i = 0;
 			for (Score sr : scorelist) {
 				double score = sr.getScore();
@@ -920,15 +922,21 @@ public class Index extends JFrame {
 			}
 			String[] columnNames = {"课程编号","课程名","成绩","状态"};
 			JTable table = new JTable(datas, columnNames);
+			DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+			tcr.setHorizontalAlignment(SwingConstants.CENTER);
+			table.setDefaultRenderer(Object.class, tcr);
 			table.setBackground(Color.WHITE);
+			table.setBounds(20, 20, 600, 300);
 			table.setRowHeight(26);
 			JTableHeader head = table.getTableHeader(); // 创建表格标题对象
 	        head.setPreferredSize(new Dimension(head.getWidth(), 30));// 设置表头大小
 	        head.setFont(new Font("楷体", Font.BOLD, 18));// 设置表格字体
+	        text.setLayout(null);
+	        text.add(table);
 			JScrollPane scrollPanes = new JScrollPane(table);
-			scrollPanes.setBackground(null);
+			//scrollPanes.setBackground(null);
 			scrollPanes.setFont(new Font("宋体", Font.PLAIN, 14));
-			scrollPanes.setBounds(20, 20, 700, 500);
+			scrollPanes.setBounds(20, 20, 600, 500);
 			text.add(scrollPanes);
 		}
 	}

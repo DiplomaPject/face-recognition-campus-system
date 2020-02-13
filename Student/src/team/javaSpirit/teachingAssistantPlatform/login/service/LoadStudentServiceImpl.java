@@ -51,8 +51,7 @@ public class LoadStudentServiceImpl {
 				Studentstatus ss=this.loadStudentDaoImpl.checkStatus(s.getSid());
 				if(ss.getRecord_status()==0) {
 					//String ip = IpUtil.getRealIP();
-					//String ip = "192.168.43.59";
-					String ip = "";
+					String ip = "192.168.43.59";
 					Students st = this.loadStudentDaoImpl.updateStudentIp(s, ip);
 					Constant.myStudent = st;
 					LoadStudent ls = new LoadStudent();
