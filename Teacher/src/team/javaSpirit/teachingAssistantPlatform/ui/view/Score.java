@@ -114,7 +114,7 @@ public class Score extends JFrame {
 		bgContentPane = new JPanel() {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				ImageIcon ii = new ImageIcon("image/img1.png");
+				ImageIcon ii = new ImageIcon("image/bglogin.png");
 				g.drawImage(ii.getImage(), 0, 0, getWidth(), getHeight(), ii.getImageObserver());
 			}
 		};

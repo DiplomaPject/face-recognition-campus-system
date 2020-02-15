@@ -1,5 +1,8 @@
 package team.javaSpirit.teachingAssistantPlatform.login.dao;
 
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -120,5 +123,23 @@ public class LoadStudentDaoImpl {
 		ss.setRecord_status(4);
 		tx.commit();
 		session.close();
+	}
+	
+	/**
+	 * <p>
+	 * Title: allStudent
+	 * </p>
+	 * <p>
+	 * Description: 查询所有学生。
+	 * </p>
+	 * 
+	 * @return 所有的学号
+	 */
+	public List<String> allStudent() {
+		Session session = HibernateUtil.getSession();
+		Query q = session.createQuery("select sid from Students");
+		List<String> list = q.list();
+		session.close();
+		return list;
 	}
 }

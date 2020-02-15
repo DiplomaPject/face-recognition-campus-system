@@ -16,7 +16,6 @@ public class ShareResource {
 	private Integer id;
 	private String oldfile;
 	private String newfile;
-	private Students stu;
 	private Date uploadtime;
 	private Teacher teacher;
 	@Id
@@ -38,14 +37,6 @@ public class ShareResource {
 	}
 	public void setNewfile(String newfile) {
 		this.newfile = newfile;
-	}
-	@ManyToOne
-	@JoinColumn(name="sid")
-	public Students getStu() {
-		return stu;
-	}
-	public void setStu(Students stu) {
-		this.stu = stu;
 	}
 	@ManyToOne
 	@JoinColumn(name="tid")

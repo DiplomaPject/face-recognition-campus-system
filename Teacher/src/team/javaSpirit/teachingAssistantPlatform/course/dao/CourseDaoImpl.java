@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import team.javaSpirit.teachingAssistantPlatform.common.Constant;
 import team.javaSpirit.teachingAssistantPlatform.entity.ClassCourse;
 import team.javaSpirit.teachingAssistantPlatform.entity.Times;
 import team.javaSpirit.teachingAssistantPlatform.util.HibernateUtil;
@@ -163,5 +164,26 @@ public class CourseDaoImpl {
 		String s = (String) q.uniqueResult();
 		session.close();
 		return s;
+	}
+	
+	/**
+	 * <p>
+	 * Title: searchCourse
+	 * </p>
+	 * <p>
+	 * Description: 通过课程id，查看课程信息。
+	 * </p>
+	 * 
+	 * @return
+	 */
+	public Object[] searchCourse( int cid ) {
+		Session session = HibernateUtil.getSession();
+		String sql = "select course_id, cname, credit, period, major, nature from Course "
+				+ "where course_id=?";
+		Query q = session.createQuery(sql);
+		q.setParameter(0, cid);
+		Object[] info = (Object[]) q.uniqueResult();
+		session.close();
+		return info;
 	}
 }

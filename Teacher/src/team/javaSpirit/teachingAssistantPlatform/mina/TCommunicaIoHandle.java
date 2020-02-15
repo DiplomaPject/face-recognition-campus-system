@@ -71,8 +71,6 @@ public class TCommunicaIoHandle extends IoHandlerAdapter {
 		String clientIP = ((InetSocketAddress) session.getRemoteAddress()).getAddress().getHostAddress();
 		String name = ss.findName(clientIP);
 		Constant.studentSession.put(name, session);
-		this.index.getSuspensionbox().setIsdisplay(false);
-		this.index.getSuspensionbox().dispose();
 		this.index.dispose();
 		this.index.init();
 	}

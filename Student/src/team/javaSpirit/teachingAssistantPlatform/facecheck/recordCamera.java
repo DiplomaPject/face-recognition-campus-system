@@ -2,10 +2,12 @@ package team.javaSpirit.teachingAssistantPlatform.facecheck;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.opencv_core.IplImage;
 import org.bytedeco.javacpp.opencv_core.Mat;
+import org.bytedeco.javacpp.presets.opencv_core.Str;
 import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.bytedeco.javacpp.helper.opencv_objdetect;
 import org.bytedeco.javacv.CanvasFrame;
@@ -58,5 +60,38 @@ public class recordCamera {
 		}else {
 			return null;
 		}
+	}
+	
+	public static String recordCameraBySid(List<String> sids, FrameGrabber grabber, CanvasFrame canvas) throws Exception {
+		/**
+		 * <p>
+		 * Title:initTrain
+		 * </p>
+		 * <p>
+		 * Description:加载opencv类， new一个转换器OpenCVFrameConverter.ToIplImage(); IplImage
+		 * grabbedImage = converter.convert(grabber.grab()); 抓取一帧视频并将其转换为图像，用于人脸识别的检测
+		 * opencv_imgcodecs.imwrite()将符合逻辑要求的图像存入本地或数据库
+		 * </p>
+		 */
+		Loader.load(opencv_objdetect.class);
+		OpenCVFrameConverter.ToIplImage converter = new OpenCVFrameConverter.ToIplImage();// 转换器
+		IplImage grabbedImage = converter.convert(grabber.grab());
+		// 抓取一帧视频并将其转换为图像，至于用这个图像用来做什么？加水印，人脸识别等等自行添加
+		long startTime = 0;
+		Mat mat = converter.convertToMat(grabber.grabFrame());
+		// FrameRecorder recorder = FrameRecorder.createDefault(outputFile,
+		// width,height);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String d = dateFormat.format(date);
+		for (String sid : sids) {
+			String src = "faceimg\\" + d + "-" + sid + ".jpg";
+			opencv_imgcodecs.imwrite(src, mat);
+			int score = FaceMatch.matchBySid(src, sid);
+			if (score >= 70) {
+				return src;
+			}
+		}
+		return null;
 	}
 }

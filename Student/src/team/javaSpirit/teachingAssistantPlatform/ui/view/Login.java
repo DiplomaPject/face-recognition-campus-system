@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import team.javaSpirit.teachingAssistantPlatform.ui.event.LoginActionListener;
+import team.javaSpirit.teachingAssistantPlatform.ui.event.LoginByFaceListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.LoginMouseActionListener;
 import team.javaSpirit.teachingAssistantPlatform.util.DlPropertiesUtil;
 
@@ -86,7 +87,7 @@ public class Login extends JFrame {
 		bgContentPane = new JPanel() {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				ImageIcon ii = new ImageIcon("image/img1.png");
+				ImageIcon ii = new ImageIcon("image/bglogin.png");
 				g.drawImage(ii.getImage(), 0, 0, getWidth(), getHeight(), ii.getImageObserver());
 			}
 		};
@@ -115,11 +116,12 @@ public class Login extends JFrame {
 		/**
 		 * logo文字
 		 */
-		JLabel logoword = new JLabel("教学辅助系统");
+		JLabel logoword = new JLabel("教务系统学生端");
 		logoword.setForeground(SystemColor.activeCaption);
 		logoword.setFont(new Font("宋体", Font.BOLD, 18));
 		logoword.setHorizontalAlignment(SwingConstants.CENTER);
-		logoword.setBounds(89, 120, 130, 22);
+		logoword.setBounds(80, 120, 150, 22);
+		logoword.setForeground(new Color(255, 255, 255));
 		bgContentPane.add(logoword);
 	}
 
@@ -134,7 +136,7 @@ public class Login extends JFrame {
 	 */
 	public void setUsername() {
 		JLabel usernamelb = new JLabel("用户名");
-		usernamelb.setForeground(Color.LIGHT_GRAY);
+		usernamelb.setForeground(Color.WHITE);
 		usernamelb.setFont(new Font("宋体", Font.BOLD, 14));
 		usernamelb.setBounds(38, 164, 54, 22);
 		bgContentPane.add(usernamelb);
@@ -160,7 +162,7 @@ public class Login extends JFrame {
 	 */
 	public void setPassword() {
 		JLabel passwordlb = new JLabel("密 码");
-		passwordlb.setForeground(Color.LIGHT_GRAY);
+		passwordlb.setForeground(Color.WHITE);
 		passwordlb.setFont(new Font("宋体", Font.BOLD, 14));
 		passwordlb.setBounds(38, 219, 54, 15);
 		bgContentPane.add(passwordlb);
@@ -189,7 +191,7 @@ public class Login extends JFrame {
 		loginButton.setForeground(new Color(169, 169, 169));
 		loginButton.setFont(new Font("宋体", Font.BOLD, 18));
 		loginButton.setBackground(null);
-		loginButton.setBounds(102, 300, 130, 43);
+		loginButton.setBounds(100, 300, 120, 40);
 		bgContentPane.add(loginButton);
 		// 回车登录
 		getRootPane().setDefaultButton(loginButton);
@@ -205,17 +207,17 @@ public class Login extends JFrame {
 	 * Title: setRememberPassword
 	 * </p>
 	 * <p>
-	 * Description:记住密码模块
+	 * Description:人脸识别登录
 	 * </p>
 	 */
 	public void setRememberPassword() {
-		boolean b = DlPropertiesUtil.getRemberPassword(this.path);
-		JRadioButton rememberPassword = new JRadioButton("记住密码", b);
-		rememberPassword.setForeground(SystemColor.textInactiveText);
-		rememberPassword.setBounds(102, 260, 121, 23);
-		LoginActionListener la = new LoginActionListener(getLogin());
-		rememberPassword.addActionListener(la);
-		bgContentPane.add(rememberPassword);
+		JLabel faceIn = new JLabel("人脸识别签到");
+		faceIn.setForeground(Color.WHITE);
+		faceIn.setFont(new Font("宋体", Font.BOLD, 14));
+		faceIn.setBounds(38, 260, 121, 23);
+		LoginByFaceListener listener = new LoginByFaceListener(this);
+		faceIn.addMouseListener(listener);
+		bgContentPane.add(faceIn);
 	}
 
 	/**
@@ -228,7 +230,7 @@ public class Login extends JFrame {
 	 */
 	public void setModifyPassword() {
 		JLabel modifyPassword = new JLabel("修改密码");
-		modifyPassword.setForeground(SystemColor.textInactiveText);
+		modifyPassword.setForeground(SystemColor.WHITE);
 		modifyPassword.setBounds(235, 264, 54, 15);
 		LoginMouseActionListener lm = new LoginMouseActionListener(this);
 		modifyPassword.addMouseListener(lm);

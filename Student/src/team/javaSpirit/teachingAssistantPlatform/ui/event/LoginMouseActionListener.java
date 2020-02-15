@@ -1,5 +1,6 @@
 package team.javaSpirit.teachingAssistantPlatform.ui.event;
 
+import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -51,12 +52,12 @@ public class LoginMouseActionListener implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-
+		this.login.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-
+		this.login.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
 }

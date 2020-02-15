@@ -60,7 +60,6 @@ public class ShareResourceServiceImpl {
 					sr.setOldfile(file.getName());
 					sr.setNewfile(newFile.getName());
 					sr.setUploadtime(time);
-					sr.setStu(Constant.myStudent);
 					// 将文件保存到数据库
 					Object o = ShareResourceDaoImpl.saveUploadResource(sr);
 					if (o != null)

@@ -91,7 +91,7 @@ public class Modify extends JFrame {
 		bgContentPane = new JPanel() {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				ImageIcon ii = new ImageIcon("image/img1.png");
+				ImageIcon ii = new ImageIcon("image/bglogin.png");
 				g.drawImage(ii.getImage(), 0, 0, getWidth(), getHeight(), ii.getImageObserver());
 			}
 		};
@@ -117,11 +117,11 @@ public class Modify extends JFrame {
 		logo.setBounds(102, 0, 110, 110);
 		bgContentPane.add(logo);
 		// logo文字
-		JLabel logoword = new JLabel("教学辅助系统");
+		JLabel logoword = new JLabel("教学系统学生端");
 		logoword.setForeground(SystemColor.activeCaption);
 		logoword.setFont(new Font("宋体", Font.BOLD, 18));
 		logoword.setHorizontalAlignment(SwingConstants.CENTER);
-		logoword.setBounds(89, 120, 130, 22);
+		logoword.setBounds(80, 120, 150, 22);
 		bgContentPane.add(logoword);
 	}
 
@@ -136,7 +136,7 @@ public class Modify extends JFrame {
 	 */
 	public void setUsername() {
 		JLabel lblNewLabel = new JLabel("用 户 名");
-		lblNewLabel.setForeground(Color.LIGHT_GRAY);
+		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("宋体", Font.BOLD, 14));
 		lblNewLabel.setBounds(48, 164, 65, 20);
 		bgContentPane.add(lblNewLabel);
@@ -157,7 +157,7 @@ public class Modify extends JFrame {
 	 */
 	public void setOldPassword() {
 		JLabel lblNewLabel_1 = new JLabel("旧 密 码");
-		lblNewLabel_1.setForeground(Color.LIGHT_GRAY);
+		lblNewLabel_1.setForeground(Color.WHITE);
 		lblNewLabel_1.setFont(new Font("宋体", Font.BOLD, 14));
 		lblNewLabel_1.setBounds(48, 205, 65, 20);
 		bgContentPane.add(lblNewLabel_1);
@@ -177,7 +177,7 @@ public class Modify extends JFrame {
 	 */
 	public void setPassword() {
 		JLabel label_1 = new JLabel("新 密 码");
-		label_1.setForeground(Color.LIGHT_GRAY);
+		label_1.setForeground(Color.WHITE);
 		label_1.setFont(new Font("宋体", Font.BOLD, 14));
 		label_1.setBounds(48, 247, 65, 20);
 		bgContentPane.add(label_1);
@@ -197,7 +197,7 @@ public class Modify extends JFrame {
 	 */
 	public void setConPassword() {
 		JLabel label = new JLabel("确认密码");
-		label.setForeground(Color.LIGHT_GRAY);
+		label.setForeground(Color.WHITE);
 		label.setFont(new Font("宋体", Font.BOLD, 14));
 		label.setBounds(48, 290, 65, 20);
 		bgContentPane.add(label);

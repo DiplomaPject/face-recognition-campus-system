@@ -51,7 +51,7 @@ public class IndexActionListener implements ActionListener {
 			rollCallThread.setList(list);
 			rollCallThread.setRe(true);
 			rollCallThread.start();
-		} else if ("暂停".equals(e.getActionCommand())) {
+		} else if ("停止".equals(e.getActionCommand())) {
 			rollCallThread.setRe(false);
 		}
 

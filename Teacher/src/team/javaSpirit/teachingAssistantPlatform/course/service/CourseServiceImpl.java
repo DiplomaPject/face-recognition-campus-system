@@ -2,6 +2,7 @@ package team.javaSpirit.teachingAssistantPlatform.course.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -172,5 +173,27 @@ public class CourseServiceImpl {
 	 */
 	public String findCname(int cid) {
 		return courseDao.findCname(cid);
+	}
+	
+	/**
+	 * <p>
+	 * Title: findCoursePlan
+	 * </p>
+	 * <p>
+	 * Description: 通过教工号，找到所有课程信息。
+	 * </p>
+	 * 
+	 * @param sid 教工号
+	 * @return 真假
+	 */
+	public List<Object[]> findCoursePlan(String tid) {
+		// 这个老师所上的课
+		List<Integer> course = courseDao.findCidByTid(tid);
+		List<Object[]> infos = new ArrayList<Object[]>();
+		for (Integer cid : course) {
+			Object[] info = courseDao.searchCourse(cid);
+			infos.add(info);
+		}
+		return infos;
 	}
 }

@@ -65,10 +65,10 @@ public class SignMouseListener implements MouseListener {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-		} else if (scs.getStudentStatus(Constant.myStudent.getSid()) != 0) {
-			JOptionPane.showMessageDialog(null, "您已签到");
-		} else {
+		} else if (!scs.findCurrentCourse(Constant.myStudent.getSid())) {
 			JOptionPane.showMessageDialog(null, "当前没有可以签到的课程");
+		} else {
+			JOptionPane.showMessageDialog(null, "您已签到");
 		}
 
 	}

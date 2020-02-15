@@ -89,7 +89,7 @@ public class Login extends JFrame {
 		bgContentPane = new JPanel() {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				ImageIcon ii = new ImageIcon("image/img1.png");
+				ImageIcon ii = new ImageIcon("image/bglogin.png");
 				g.drawImage(ii.getImage(), 0, 0, getWidth(), getHeight(), ii.getImageObserver());
 			}
 		};
@@ -118,11 +118,11 @@ public class Login extends JFrame {
 		/**
 		 * logo文字
 		 */
-		JLabel logoword = new JLabel("教学辅助系统");
-		logoword.setForeground(SystemColor.activeCaption);
+		JLabel logoword = new JLabel("教学系统教师端");
+		logoword.setForeground(Color.WHITE);
 		logoword.setFont(new Font("宋体", Font.BOLD, 18));
 		logoword.setHorizontalAlignment(SwingConstants.CENTER);
-		logoword.setBounds(89, 120, 130, 22);
+		logoword.setBounds(80, 120, 150, 22);
 		bgContentPane.add(logoword);
 	}
 
@@ -137,7 +137,7 @@ public class Login extends JFrame {
 	 */
 	public void setUsername() {
 		JLabel usernamelb = new JLabel("用户名");
-		usernamelb.setForeground(Color.LIGHT_GRAY);
+		usernamelb.setForeground(Color.WHITE);
 		usernamelb.setFont(new Font("宋体", Font.BOLD, 14));
 		usernamelb.setBounds(38, 164, 54, 22);
 		bgContentPane.add(usernamelb);
@@ -163,7 +163,7 @@ public class Login extends JFrame {
 	 */
 	public void setPassword() {
 		JLabel passwordlb = new JLabel("密 码");
-		passwordlb.setForeground(Color.LIGHT_GRAY);
+		passwordlb.setForeground(Color.WHITE);
 		passwordlb.setFont(new Font("宋体", Font.BOLD, 14));
 		passwordlb.setBounds(38, 219, 54, 15);
 		bgContentPane.add(passwordlb);
@@ -212,8 +212,9 @@ public class Login extends JFrame {
 	public void setRememberPassword() {
 		boolean b = DlProPertiesUtil.getRemberPassword(this.path);
 		JRadioButton rememberPassword = new JRadioButton("记住密码", b);
-		rememberPassword.setForeground(SystemColor.textInactiveText);
+		rememberPassword.setForeground(Color.LIGHT_GRAY);
 		rememberPassword.setBounds(102, 260, 121, 23);
+		rememberPassword.setOpaque(false);
 		bgContentPane.add(rememberPassword);
 		rememberPassword.addActionListener(new TeacherLoginActionListener(getLogin()));
 	}
@@ -228,7 +229,7 @@ public class Login extends JFrame {
 	 */
 	public void setModifyPassword() {
 		JLabel modifyPassword = new JLabel("修改密码");
-		modifyPassword.setForeground(SystemColor.textInactiveText);
+		modifyPassword.setForeground(Color.LIGHT_GRAY);
 		modifyPassword.setBounds(235, 264, 54, 15);
 		modifyPassword.addMouseListener(new TeacherLoginMouseActionListener(this));
 		bgContentPane.add(modifyPassword);
