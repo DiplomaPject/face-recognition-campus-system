@@ -11,6 +11,7 @@ import team.javaSpirit.teachingAssistantPlatform.common.Constant;
 import team.javaSpirit.teachingAssistantPlatform.entity.Teacher;
 import team.javaSpirit.teachingAssistantPlatform.feedback.services.FeedBackServicesImpl;
 import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.TeacherClassServiceImpl;
+import team.javaSpirit.teachingAssistantPlatform.signIn.dao.StudentCourseDao;
 import team.javaSpirit.teachingAssistantPlatform.signIn.service.StudentCourseService;
 import team.javaSpirit.teachingAssistantPlatform.ui.view.Index;
 
@@ -28,6 +29,7 @@ public class IndexActionListener implements ActionListener {
 
 	private Index index;
 	private JTextArea text;
+	private JTextArea name;
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -42,8 +44,10 @@ public class IndexActionListener implements ActionListener {
 	public IndexActionListener(Index index) {
 		this.index = index;
 	}
-	public IndexActionListener(Index index,JTextArea text) {
-		this.index=index;this.text=text;
+	public IndexActionListener(Index index,JTextArea text,JTextArea name) {
+		this.index=index;
+		this.text=text;
+		this.name = name;
 	}
 	
 	// 签到的逻辑判断
@@ -80,7 +84,14 @@ public class IndexActionListener implements ActionListener {
 	
 	//发送课堂反馈的逻辑
 	public void setSend() {
-		FeedBackServicesImpl.setTxt(this.text.getText());		
-		JOptionPane.showMessageDialog(null, "您反馈的问题已收到！！！");
+		String name = this.name.getText();
+		StudentCourseDao s = new StudentCourseDao();
+		Teacher teacher = s.getTeacherByName(name);
+		if (teacher == null) {
+			JOptionPane.showMessageDialog(null, "没有找到该教师，请确认！");
+			return;
+		}
+		FeedBackServicesImpl.setTxt(this.text.getText(), teacher);		
+		JOptionPane.showMessageDialog(null, "您反馈的问题已提交");
 	}
 }

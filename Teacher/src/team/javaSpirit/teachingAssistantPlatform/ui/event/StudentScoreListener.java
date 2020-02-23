@@ -50,10 +50,13 @@ public class StudentScoreListener implements ActionListener {
 		}else {
 			StudentScoreService ss = new StudentScoreService();
 			String sid = Index.sid;
+			int cid = Index.cid;
 			Double s = new Double(getScore);
-			ss.changeScore(sid, s);
+			ss.changeScore(sid,cid, s);
 			score.dispose();
 			javax.swing.JOptionPane.showMessageDialog(null, getScore+"已修改");
+			Index.courseList = ss.courseStudent(cid);
+			Index.mode.fireTableDataChanged();
 		}
 		
 	}

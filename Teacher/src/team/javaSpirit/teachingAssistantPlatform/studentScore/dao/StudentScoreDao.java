@@ -22,16 +22,27 @@ public class StudentScoreDao {
 	 * 
 	 * @return
 	 */
-	public List<Object[]> searchStudent() {
+	public List<Object[]> searchStudent(int id) {
 		Session session = HibernateUtil.getSession();
 		String sql = "select s.sid,s.name,s2.classin.class_name,s1.score from Students s, Score s1, StudentClass s2 "
-				+ "where s2.classin.class_id=? and s.sid=s2.student.sid and s1.student.sid=s.sid and s1.course.course_id=?";
+				+ "where s.sid=s2.student.sid and s1.student.sid=s.sid and s1.course.course_id=? and s2.classin.class_id=?";
 		Query q = session.createQuery(sql);
-		q.setParameter(0, Constant.cid);
-		q.setParameter(1, Constant.cid);
+		q.setParameter(0, id);
+		q.setParameter(1, id);
 		List<Object[]> list = q.list();
 		session.close();
 		return list;
+	}
+	
+	public int searchCourseId(String cname) {
+		Session session = HibernateUtil.getSession();
+		String sql = "select course_id from Course "
+				+ "where cname=?";
+		Query q = session.createQuery(sql);
+		q.setParameter(0, cname);
+		int cid = (int) q.uniqueResult();
+		session.close();
+		return cid;
 	}
 	
 	/**
@@ -43,14 +54,14 @@ public class StudentScoreDao {
 	 * Description: 修改学生该科成绩
 	 * </p>
 	 */
-	public void setStuScore(String sid,  double s) {
+	public void setStuScore(String sid,  int cid, double s) {
 		Session session = HibernateUtil.getSession();
 		Transaction tx = session.beginTransaction();
 		String sql = "update score set score=? where sid=? and course_id=?";
 		Query q = session.createSQLQuery(sql);
 		q.setParameter(0, s);
 		q.setParameter(1, sid);
-		q.setParameter(2, Constant.cid);
+		q.setParameter(2, cid);
 		q.executeUpdate();
 		tx.commit();
 		session.close();

@@ -4,9 +4,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
 
 import team.javaSpirit.teachingAssistantPlatform.common.Communication;
 import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.Service;
+import team.javaSpirit.teachingAssistantPlatform.studentScore.service.StudentScoreService;
+import team.javaSpirit.teachingAssistantPlatform.ui.view.Index;
 
 /**
  * <p>
@@ -18,10 +21,9 @@ import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.Servic
  * 
  */
 public class MyItemListener implements ItemListener {
-	/* 开启连接的服务 */
-	private Service service;
 	/* 下拉框 */
 	private JComboBox<?> comboBox;
+	private Index index;
 
 	/**
 	 * <p>
@@ -45,9 +47,9 @@ public class MyItemListener implements ItemListener {
 	 * 
 	 * @param comboBox
 	 */
-	public MyItemListener(JComboBox<?> comboBox,Service service) {
-		this.service = service;
+	public MyItemListener(JComboBox<?> comboBox, Index index) {
 		this.comboBox = comboBox;
+		this.index = index;
 	}
 
 	/**
@@ -56,19 +58,18 @@ public class MyItemListener implements ItemListener {
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
-			if (comboBox.getSelectedItem() == "开启") {
-				// 开启服务
-				service.openService(Communication.tPort);
-			} else if (comboBox.getSelectedItem() == "关闭") {
-				// 关闭服务
-				service.closeServise();
-			} else if (comboBox.getSelectedItem() == "开启共享") {
-				// 开启屏幕共享
-				service.openScreenShare();
-			} else {
-				// 关闭屏幕共享
-				service.closeScreenShare();
-			}
+			String item = (String) comboBox.getSelectedItem();
+			String info[] = item.split(" ");
+			int id = Integer.valueOf(info[0]);
+			// 成绩录入的服务
+			StudentScoreService ss = new StudentScoreService();
+			index.courseList = ss.courseStudent(id);
+			index.contentpl.validate(); 
+			index.contentpl.repaint(); 
+			index.mode.fireTableDataChanged();
+			index.setContentpl();
+			index.setGroupLayout();
+			index.selectstuScore();
 		}
 	}
 

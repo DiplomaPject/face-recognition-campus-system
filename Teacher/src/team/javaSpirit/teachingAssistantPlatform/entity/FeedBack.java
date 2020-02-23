@@ -16,6 +16,7 @@ import javax.persistence.Table;
 public class FeedBack {
 	private int id;
 	private Students student;
+	private Teacher teacher;
 	private String txt;
 	private int status;// 是否审核
 	private Date time;// 上传时间
@@ -38,6 +39,16 @@ public class FeedBack {
 
 	public void setStudent(Students student) {
 		this.student = student;
+	}
+	
+	@ManyToOne
+	@JoinColumn(name = "tid")
+	public Teacher getTeacher() {
+		return teacher;
+	}
+
+	public void setTeacher(Teacher teacher) {
+		this.teacher = teacher;
 	}
 
 	public String getTxt() {

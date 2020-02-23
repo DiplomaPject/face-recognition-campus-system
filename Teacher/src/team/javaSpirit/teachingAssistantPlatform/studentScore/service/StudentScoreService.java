@@ -16,8 +16,8 @@ public class StudentScoreService {
 	 * 
 	 * @return
 	 */
-	public List<Object[]> courseStudent() {
-		return studentScoreDao.searchStudent();
+	public List<Object[]> courseStudent(int id) {
+		return studentScoreDao.searchStudent(id);
 	}
 	
 	/**
@@ -30,8 +30,8 @@ public class StudentScoreService {
 	 * 
 	 * @return
 	 */
-	public void changeScore(String sid, double s) {
-		studentScoreDao.setStuScore(sid,s);
+	public void changeScore(String sid, int cid, double s) {
+		studentScoreDao.setStuScore(sid,cid,s);
 	}
 	
 }

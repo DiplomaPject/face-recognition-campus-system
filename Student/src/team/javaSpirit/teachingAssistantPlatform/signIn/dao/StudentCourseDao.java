@@ -11,6 +11,7 @@ import team.javaSpirit.teachingAssistantPlatform.entity.ClassCourse;
 import team.javaSpirit.teachingAssistantPlatform.entity.Record;
 import team.javaSpirit.teachingAssistantPlatform.entity.Students;
 import team.javaSpirit.teachingAssistantPlatform.entity.Studentstatus;
+import team.javaSpirit.teachingAssistantPlatform.entity.Teacher;
 import team.javaSpirit.teachingAssistantPlatform.entity.Times;
 import team.javaSpirit.teachingAssistantPlatform.util.HibernateUtil;
 
@@ -32,6 +33,27 @@ public class StudentCourseDao {
 		session.close();
 		return s;
 	}
+	
+	/**
+	 * <p>
+	 * Title: getTeacherByName
+	 * </p>
+	 * <p>
+	 * Description: 通过姓名，查询教师。
+	 * </p>
+	 * 
+	 * @param name 教师姓名
+	 * @return 教师对象
+	 */
+	public Teacher getTeacherByName(String name) {
+		Session session = HibernateUtil.getSession();
+		Query q = session.createQuery("from Teacher where tname=?");
+		q.setParameter(0, name);
+		Teacher teacher = (Teacher) q.uniqueResult();
+		session.close();
+		return teacher;
+	}
+	
 	/**
 	 * <p>Title: setImageById</p>
 	 * <p>Description: 第一次签到，保存图片/p>

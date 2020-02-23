@@ -24,8 +24,6 @@
 		<mapping
 			class="team.javaSpirit.teachingAssistantPlatform.entity.Course" />
 		<mapping
-			class="team.javaSpirit.teachingAssistantPlatform.entity.LeavePaper" />
-		<mapping
 			class="team.javaSpirit.teachingAssistantPlatform.entity.LoadStudent" />
 		<mapping
 			class="team.javaSpirit.teachingAssistantPlatform.entity.LoadTeacher" />

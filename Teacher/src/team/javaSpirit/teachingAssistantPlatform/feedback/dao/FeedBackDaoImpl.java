@@ -6,14 +6,16 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import team.javaSpirit.teachingAssistantPlatform.common.Constant;
 import team.javaSpirit.teachingAssistantPlatform.entity.FeedBack;
 import team.javaSpirit.teachingAssistantPlatform.util.HibernateUtil;
 
 public class FeedBackDaoImpl {
 	public List<FeedBack> showTxtByStatus(int status) {
 		Session session = HibernateUtil.getSession();
-		Query q = session.createQuery(" from FeedBack where status=?");
+		Query q = session.createQuery(" from FeedBack where status=? and tid=?");
 		q.setParameter(0, status);
+		q.setParameter(1, Constant.myTeacher.getTid());
 		List<FeedBack> list = q.list();
 		session.close();
 		return list;

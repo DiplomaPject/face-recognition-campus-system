@@ -38,6 +38,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import org.apache.mina.core.session.IoSession;
@@ -52,6 +53,7 @@ import team.javaSpirit.teachingAssistantPlatform.entity.Teacher;
 import team.javaSpirit.teachingAssistantPlatform.feedback.service.FeedBackServiceImpl;
 import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.Service;
 import team.javaSpirit.teachingAssistantPlatform.remoteMonitoring.service.ServiceOperationServiceImpl;
+import team.javaSpirit.teachingAssistantPlatform.studentScore.dao.StudentScoreDao;
 import team.javaSpirit.teachingAssistantPlatform.studentScore.service.StudentScoreService;
 import team.javaSpirit.teachingAssistantPlatform.studentSignIn.service.StudentSignInServiceImpl;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.CheckBoxMouseListener;
@@ -64,7 +66,6 @@ import team.javaSpirit.teachingAssistantPlatform.ui.event.ResourceMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.ShareResourceMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.StuShowActionListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.StudentScoreMouseListener;
-import team.javaSpirit.teachingAssistantPlatform.ui.event.StudentShowMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.StudentSignMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.UploadMouseListener;
 import team.javaSpirit.teachingAssistantPlatform.ui.event.VideotapeListener;
@@ -84,28 +85,28 @@ import team.javaSpirit.teachingAssistantPlatform.vediotape.service.VediotapeServ
 public class Index extends JFrame {
 	/** serialVersionUID */
 	private static final long serialVersionUID = 1L;
-	private VediotapeService service1;
 	/* 服务对象 */
 	Service service;
 	/* 背景面板 */
 	private JPanel bgContentPane;
 	/* 显示学生签到情况的标签 */
 	private JTable table_1;
-	/* 显示学生请假情况的标签 */
-	private JTable table_2;
+	/* 显示学生成绩的标签 */
+	public static DefaultTableModel  mode;
+	public static JTable  table_2;
 	/* 成绩录入菜单 */
 	private JPanel menu1;
-	/* 录屏菜单 */
+	/* 教学计划菜单 */
 	private JPanel menu2;
 	/* 签到信息菜单 */
 	private JPanel menu3;
-	/* 学生演示菜单 */
+	/* logo显示 */
 	private JPanel menu4;
 	/* 随机点名菜单 */
 	private JPanel menu5;
 	/* 课堂反馈菜单 */
 	private JPanel menu9;
-	/* 资源共享菜单 */
+	/* 教材管理菜单 */
 	private JPanel menu10;
 	/* 教师信息菜单 */
 	private JPanel lmenu1;
@@ -116,11 +117,14 @@ public class Index extends JFrame {
 	/** 中间模块容器 */
 	private JPanel centerpl;
 	/** 内容模块容器 */
-	private JPanel contentpl;
+	public static JPanel contentpl;
 	/* 监听事件 */
 	private IndexActionListener event;
 	/*成绩对应的学号*/
 	public static String sid;
+	public static int cid;
+	/*课程列表*/
+	public static List<Object[]> courseList;
 	
 	public String getSid() {
 		return sid;
@@ -128,6 +132,14 @@ public class Index extends JFrame {
 	
 	public void setSid(String sid) {
 		this.sid = sid;
+	}
+
+	public static int getCid() {
+		return cid;
+	}
+
+	public static void setCid(int cid) {
+		Index.cid = cid;
 	}
 
 	/**
@@ -293,7 +305,7 @@ public class Index extends JFrame {
 	 * </p>
 	 */
 	public void setTeachback() {
-		// 课堂反馈菜单
+		// 教学反馈菜单
 		menu9 = new JPanel();
 		menu9.setLayout(null);
 		menu9.setForeground(Color.WHITE);
@@ -304,8 +316,8 @@ public class Index extends JFrame {
 		label_2.setIcon(new ImageIcon("image\\menu2.png"));
 		label_2.setBounds(13, 10, 60, 60);
 		menu9.add(label_2);
-		// 课堂反馈按钮
-		JButton button_3 = new JButton("课堂反馈");
+		// 教学反馈按钮
+		JButton button_3 = new JButton("教学反馈");
 		button_3.setForeground(new Color(255, 255, 255));
 		button_3.setFont(new Font("宋体", Font.BOLD, 16));
 		button_3.setBorder(null);
@@ -402,13 +414,18 @@ public class Index extends JFrame {
 	 * </p>
 	 */
 	public void centerContent() {
+		JScrollPane scrollPanes = new JScrollPane();
+		scrollPanes.setLocation(1, 1);
+		scrollPanes.setSize(790, 320);
+		scrollPanes.setBorder(null);
+		contentpl.add(scrollPanes);
 		// 签到情况的服务
 		StudentSignInServiceImpl ss = new StudentSignInServiceImpl();
 		// 学生签到的情况
 		List<Object[]> signStu = ss.SignInStudent();
-		final Object[] columnNames = { "签到", "迟到", "请假", "旷课" };
+		final Object[] columnNames = { "签到", "迟到", "旷课" };
 		int row = signStu.size();
-		Object[][] rowData = new Object[row][4];
+		Object[][] rowData = new Object[row][3];
 		int i = 0, j = 0, k = 0, l = 0;
 		for (Object[] stu : signStu) {
 			if ((int) stu[2] == 1) {
@@ -417,11 +434,8 @@ public class Index extends JFrame {
 			} else if ((int) stu[2] == 2) {
 				rowData[j][1] = stu[0] + "-" + stu[1];
 				j++;
-			} else if ((int) stu[2] == 3) {
-				rowData[k][2] = stu[0] + "-" + stu[1];
-				k++;
-			} else if ((int) stu[2] == 0) {
-				rowData[l][3] = stu[0] + "-" + stu[1];
+			}  else if ((int) stu[2] == 0) {
+				rowData[l][2] = stu[0] + "-" + stu[1];
 				l++;
 			}
 		}
@@ -431,7 +445,7 @@ public class Index extends JFrame {
 		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
 		tcr.setHorizontalAlignment(SwingConstants.CENTER);
 		table_1.setDefaultRenderer(Object.class, tcr);
-		table_1.setBounds(1, 32, 790, 300);
+		table_1.setBounds(1, 32, 790, 600);
 		table_1.setFont(new Font("宋体", Font.PLAIN, 16));
 		table_1.setRowHeight(50);// 设置每行的高度
 		table_1.setRowMargin(5);// 设置相邻两行单元格的距离
@@ -442,16 +456,9 @@ public class Index extends JFrame {
 		contentpl.setLayout(null);
 		contentpl.add(table_1);
 
-		JScrollPane scrollPane = new JScrollPane(table_1);
-		scrollPane.setBounds(1, 1, 790, 520);
-		scrollPane.setEnabled(false);
-		contentpl.add(scrollPane);
-
-		// 请假条滚动表格设置
-		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
-		scrollPane_1.setBounds(1, 355, 908, 185);
-		contentpl.add(scrollPane_1);
+		scrollPanes.setViewportView(table_1);
 		
+		this.setVisible(true);
 	}
 
 	/**
@@ -496,7 +503,7 @@ public class Index extends JFrame {
 		this.setStusign();
 		// 添加教学计划菜单
 		this.setRecordScreen();
-		// 添加学生演示菜单
+		// 添加logo
 		this.setStuzs();
 		// 添加随机点名菜单
 		this.setRandomcall();
@@ -665,80 +672,6 @@ public class Index extends JFrame {
 		// 内容页，显示学生签到请假情况
 		centerContent();
 	}
-
-	/**
-	 * 
-	 * <p>
-	 * Title: selectstuContent
-	 * </p>
-	 * <p>
-	 * Description:学生演示内容页，有小电脑和名字（学生按钮）
-	 * </p>
-	 */
-	public void selectstuContent() {
-
-		centerpl.setLayout(null);
-		JScrollPane scrollPane_1 = new JScrollPane((Component) null);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane_1.setBounds(1, 0, 909, 546);
-		centerpl.add(scrollPane_1);
-
-		JPanel panel = new JPanel();
-		panel.setBackground(new Color(230, 230, 250));
-		scrollPane_1.setViewportView(panel);
-		panel.setPreferredSize(new Dimension(908, 1800));
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-		
-		// 所有连接的学生
-		Iterator<ConcurrentHashMap.Entry<String, IoSession>> entries = Constant.studentSession.entrySet().iterator();
-		while (entries.hasNext()) {
-			ConcurrentHashMap.Entry<String, IoSession> entry = entries.next();
-			JButton j = new JButton(entry.getKey());
-			// 为学生的小电脑和名字添加点击事件
-			j.addActionListener(new StuShowActionListener(service));
-			j.setPreferredSize(new Dimension(170, 80));
-			j.setIcon(new ImageIcon("image\\stu.png"));
-			j.setHorizontalAlignment(SwingConstants.LEFT);
-			j.setForeground(new Color(100, 149, 237));
-			j.setFont(new Font("宋体", Font.BOLD, 18));
-			j.setBorder(UIManager.getBorder("Button.border"));
-			j.setBackground(Color.WHITE);
-			panel.add(j);
-		}
-
-
-	}
-
-	/**
-	 * 
-	 * <p>
-	 * Title: jumpSelectstu
-	 * </p>
-	 * <p>
-	 * Description:跳转到学生演示界面
-	 * </p>
-	 */
-	public void jumpSelectstu() {
-		// 顶部菜单栏
-		topMenu();
-		// 左侧菜单栏
-		leftMenu();
-		// 设置背景图
-		setBackground();
-		// 设置布局方式为绝对定位
-		this.getContentPane().setLayout(null);
-		// 时间标志
-		setTime();
-		// 中间容器
-		this.setCenterpl();
-		this.setContentpl();
-		// 聊天窗口
-		//chatView();
-		// 布局设置
-		setGroupLayout();
-		// 内容设置，学生演示内容页，有小电脑和名字（学生按钮）
-		selectstuContent();
-	}
 	
 	/**
 	 * 
@@ -781,58 +714,113 @@ public class Index extends JFrame {
 	 * </p>
 	 */
 	public void selectstuScore() {
-		// 成绩录入的服务
-		StudentScoreService ss = new StudentScoreService();
-		// 成绩录入的情况
-		List<Object[]> signStu = ss.courseStudent();
+		JLabel title = new JLabel("科目选择: ");
+		title.setForeground(new Color(255, 255, 255));
+		title.setFont(new Font("宋体", Font.BOLD, 16));
+		title.setHorizontalAlignment(SwingConstants.CENTER);
+		title.setBounds(480, 5, 100, 26);
+		contentpl.add(title);
+		
+		CourseServiceImpl cs = new CourseServiceImpl();
+		List<Object[]> courses = cs.findCoursePlan(Constant.myTeacher.getTid());
+		
+		JComboBox<String> comboBox_2 = new JComboBox<String>();
+		comboBox_2.setEnabled(true);
+		comboBox_2.setEditable(true);
+		comboBox_2.setBounds(580, 5, 200, 20);
+		
+		for (Object[] objects : courses) {
+			String id = objects[0] + "";
+			String name = (String)objects[1];
+			comboBox_2.addItem( id+ " "+name);
+		}
+		
+		//System.out.println("id:"+first);
+		contentpl.add(comboBox_2);
+		MyItemListener listener = new MyItemListener(comboBox_2, this);
+		comboBox_2.addItemListener(listener);
+		
+		JScrollPane scrollPanes = new JScrollPane();
+		scrollPanes.setLocation(1, 40);
+		scrollPanes.setSize(790, 320);
+		scrollPanes.setBorder(null);
+		contentpl.add(scrollPanes);
+		
+		if (courseList == null || courseList.size() == 0) {
+			StudentScoreService ss = new StudentScoreService();
+			String first = courses.get(0)[0] + "";
+			this.courseList = ss.courseStudent(Integer.valueOf(first));
+		}
+		List<Object[]> scores = courseList;
 		final Object[] columnNames = { "学号", "姓名", "科目", "成绩" };
-		int row = signStu.size();
+		
+		int row = scores.size();
+		//System.out.println("行数:"+row);
 		Object[][] rowData = new Object[row][4];
 		Double s = 0.0;
 		String str = s+"";
 		int i = 0;
-		for (Object[] stu : signStu) {
+		for (Object[] stu : scores) {
+			System.out.println(stu[0]);
 			rowData[i][0] = stu[0];
 			rowData[i][1] = stu[1];
 			rowData[i][2] = stu[2];
 			rowData[i][3] = stu[3];
 			i++;
 		}
-
-		table_1 = new JTable(rowData, columnNames);
+		
+		mode = new DefaultTableModel(rowData,columnNames);
+		table_2 = new JTable(mode);
+		table_2.setModel(mode);
+		table_2.setEnabled(true);
+		//table_2 = new JTable (rowData, columnNames);
 		// 设置table内容居中显示
 		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
 		tcr.setHorizontalAlignment(SwingConstants.CENTER);
-		table_1.setDefaultRenderer(Object.class, tcr);
-		table_1.setBounds(1, 32, 790, 300);
-		table_1.setFont(new Font("宋体", Font.PLAIN, 16));
-		table_1.setRowHeight(50);// 设置每行的高度
-		table_1.setRowMargin(5);// 设置相邻两行单元格的距离
-		table_1.setShowHorizontalLines(true);// 是否显示水平的网格线
-		JTableHeader head = table_1.getTableHeader(); // 创建表格标题对象
+		table_2.setDefaultRenderer(Object.class, tcr);
+		table_2.setBounds(1, 32, 790, 600);
+		table_2.setFont(new Font("宋体", Font.PLAIN, 16));
+		table_2.setRowHeight(50);// 设置每行的高度
+		table_2.setRowMargin(5);// 设置相邻两行单元格的距离
+		table_2.setShowHorizontalLines(true);// 是否显示水平的网格线
+		JTableHeader head = table_2.getTableHeader(); // 创建表格标题对象
         head.setPreferredSize(new Dimension(head.getWidth(), 50));// 设置表头大小
         head.setFont(new Font("楷体", Font.BOLD, 18));// 设置表格字体
-		table_1.addMouseListener(new MouseAdapter(){
+		contentpl.setLayout(null);
+		contentpl.add(table_2);
+
+		scrollPanes.setViewportView(table_2);
+		// 设置table内容居中显示	
+		table_2.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e) {//仅当鼠标单击时响应
                //得到选中的行列的索引值
-              int r= table_1.getSelectedRow();
-              int c= table_1.getSelectedColumn();
+              int r= table_2.getSelectedRow();
+              int c= table_2.getSelectedColumn();
               if (c == 3) {
-            	  String sid= (String) table_1.getValueAt(r, 0);
+            	  String sid= (String) table_2.getValueAt(r, 0);
             	  setSid(sid);
+            	  String cname = (String) table_2.getValueAt(r, 2);
+            	  cid = new StudentScoreDao().searchCourseId(cname);
+            	  setCid(cid);
             	  //弹出输入框
             	  Score score=new Score();
           		  score.init();
               } 
             }
+            @Override
+            public void mouseExited(MouseEvent e) {
+            	// TODO Auto-generated method stub
+            	super.mouseExited(e);
+            	scrollPanes.validate(); 
+            	scrollPanes.repaint(); 
+    			mode.fireTableDataChanged();
+    			table_2.setModel(mode);
+    			table_2.setEnabled(true);
+    			
+            }
         }); 
-		contentpl.setLayout(null);
-		contentpl.add(table_1);
 
-		JScrollPane scrollPane = new JScrollPane(table_1);
-		scrollPane.setBounds(1, 1, 790, 520);
-		scrollPane.setEnabled(false);
-		contentpl.add(scrollPane);
+		this.setVisible(true);
 	}
 	
 	/**
@@ -885,6 +873,7 @@ public class Index extends JFrame {
 		scrollPane.setBounds(1, 1, 790, 520);
 		scrollPane.setEnabled(false);
 		contentpl.add(scrollPane);
+		this.setVisible(true);
 	}
 	
 	/**
@@ -910,8 +899,7 @@ public class Index extends JFrame {
 		// 中间容器
 		this.setCenterpl();
 		this.setContentpl();
-		// 聊天窗口
-		//chatView();
+
 		// 布局设置
 		setGroupLayout();
 		// 内容设置
@@ -979,6 +967,7 @@ public class Index extends JFrame {
 				text.add(jl);
 			}
 		}
+		this.setVisible(true);
 	}
 
 	/**
@@ -1180,7 +1169,7 @@ public class Index extends JFrame {
 		 b=b+45;
 		}
 
-
+		this.setVisible(true);
 	}
 	/**
 	 * 

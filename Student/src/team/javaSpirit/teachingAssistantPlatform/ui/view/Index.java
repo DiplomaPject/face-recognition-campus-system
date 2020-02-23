@@ -367,19 +367,19 @@ public class Index extends JFrame {
 	 * </p>
 	 */
 	public void setRemoteMenu() {
-		// 课堂反馈容器
+		// 教学反馈容器
 		JPanel menu2 = new JPanel();
 		menu2.setBounds(166, 28, 88, 99);
 		menu2.setBorder(BorderFactory.createLineBorder(new Color(42, 118, 168)));
 		menu2.setOpaque(false);
 		menu2.setLayout(null);
 
-		// 课堂反馈图标
+		// 教学反馈图标
 		JLabel lb2 = new JLabel("");
 		lb2.setBounds(13, 10, 60, 60);
 		menu2.add(lb2);
 		lb2.setIcon(new ImageIcon("image/menu2.png"));
-		// 课堂反馈按钮
+		// 教学反馈按钮
 		JButton bt2 = new JButton("教学反馈");
 		bt2.setBounds(13, 70, 61, 17);
 
@@ -516,7 +516,7 @@ public class Index extends JFrame {
 	 * Title: setRemote
 	 * </p>
 	 * <p>
-	 * Description:设置课堂反馈页面，向centerpl中添加控件，向contentpl中添加控件
+	 * Description:设置教学反馈页面，向centerpl中添加控件，向contentpl中添加控件
 	 * </p>
 	 */
 	public void setRemote() {
@@ -533,7 +533,7 @@ public class Index extends JFrame {
 		closepl.setLayout(null);
 
 		JLabel lblNewLabel_1 = new JLabel("教学反馈");
-		lblNewLabel_1.setForeground(SystemColor.textInactiveText);
+		lblNewLabel_1.setForeground(Color.WHITE);
 		lblNewLabel_1.setBounds(10, 5, 63, 23);
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		closepl.add(lblNewLabel_1);
@@ -553,20 +553,35 @@ public class Index extends JFrame {
 		contentpl.add(chatpl);
 		chatpl.setLayout(null);
 
-		JTextArea textField = new JTextArea("  你从老师的讲授中收获了什么？你还有什么建议对老师说？");
+		JTextArea textField = new JTextArea("  你从老师的讲授中收获了什么？\n  你还有什么建议对老师说？");
 		textField.setBounds(14, 14, 570, 180);
 		textField.setFont(new Font("宋体", Font.PLAIN, 22));
 		textField.setForeground(SystemColor.textHighlight);
 		chatpl.add(textField);
 		textField.setColumns(10);
-
+		
+		JLabel lb2 = new JLabel("To: ");
+		lb2.setForeground(Color.WHITE);
+		lb2.setFont(new Font("宋体", Font.PLAIN, 16));
+		lb2.setBounds(260, 200, 40, 30);
+		lb2.setForeground(new Color(255, 255, 255));
+		chatpl.add(lb2);
+		
+		JTextArea toTeacher = new JTextArea("教师名字");
+		toTeacher.setBounds(300, 208, 100, 20);
+		toTeacher.setFont(new Font("宋体", Font.PLAIN, 14));
+		toTeacher.setForeground(SystemColor.textHighlight);
+		chatpl.add(toTeacher);
+		toTeacher.setColumns(6);
+		
 		JButton btnNewButton = new JButton("确认提交");
 		btnNewButton.setBounds(470, 200, 100, 30);
 		chatpl.add(btnNewButton);
 		// 事件对象
-		IndexActionListener il=new IndexActionListener(this,textField);
+		IndexActionListener il=new IndexActionListener(this,textField,toTeacher);
 		// 添加事件
 		btnNewButton.addActionListener(il);
+		this.setVisible(true);
 	}
 
 
@@ -635,23 +650,35 @@ public class Index extends JFrame {
 		scrollPane.setViewportView(text);
 		// 获取所有资源
 		List<ShareResource> list = ShareResourceDaoImpl.getAllResources();
-		// 遍历所有已上传的资源
-		for (ShareResource sr : list) {
-			if (sr.getOldfile() != null && sr.getUploadtime() != null) {
-				Teacher t = sr.getTeacher();
-				JLabel jl = null;
-				SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd" ); 
-				String str = sdf.format(sr.getUploadtime());
-				jl = new JLabel(
-						"    题目：" + sr.getOldfile() + "   上传者：" + t.getTname() + "    时间：" + str);
-				jl.setFont(new Font("宋体", Font.BOLD, 14));
-				jl.setForeground(Color.BLACK);
-				jl.setPreferredSize(new Dimension(700, 45));
-				jl.setHorizontalAlignment(SwingConstants.LEFT);
-				jl.addMouseListener(new ResourceMouseListener(this, sr));
-				text.add(jl);
+		if (list.isEmpty()) {
+			JLabel jl = null;
+			jl = new JLabel("目前没有电子教材");
+			jl.setFont(new Font("宋体", Font.BOLD, 14));
+			jl.setForeground(new Color(119, 136, 153));
+			jl.setHorizontalAlignment(SwingConstants.CENTER);
+			jl.setBounds(341, 20, 105, 26);
+			text.add(jl);
+		}else {
+			// 遍历所有已上传的资源
+			for (ShareResource sr : list) {
+				if (sr.getOldfile() != null && sr.getUploadtime() != null) {
+					Teacher t = sr.getTeacher();
+					JLabel jl = null;
+					SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd" ); 
+					String str = sdf.format(sr.getUploadtime());
+					jl = new JLabel(
+							"    题目：" + sr.getOldfile() + "   上传者：" + t.getTname() + "    时间：" + str);
+					jl.setFont(new Font("宋体", Font.BOLD, 14));
+					jl.setForeground(Color.BLACK);
+					jl.setPreferredSize(new Dimension(700, 45));
+					jl.setHorizontalAlignment(SwingConstants.LEFT);
+					jl.addMouseListener(new ResourceMouseListener(this, sr));
+					text.add(jl);
+				}
 			}
 		}
+		
+		this.setVisible(true);
 	}
 	
 	/**
@@ -749,6 +776,7 @@ public class Index extends JFrame {
 				text.add(jl);
 			}
 		}
+		this.setVisible(true);
 	}
 	
 	/**
@@ -862,6 +890,7 @@ public class Index extends JFrame {
 			scrollPanes.setBounds(20, 20, 600, 500);
 			text.add(scrollPanes);
 		}
+		this.setVisible(true);
 	}
 
 	

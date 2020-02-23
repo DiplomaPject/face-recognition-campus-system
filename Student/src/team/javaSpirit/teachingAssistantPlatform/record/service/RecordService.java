@@ -1,6 +1,8 @@
 package team.javaSpirit.teachingAssistantPlatform.record.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +28,9 @@ public class RecordService {
 		List<Record> list = recordDao.allRecordBysid(sid);
 		List<Record> sublist = new ArrayList<Record>();
 		Date current = new Date();
-		long seven = current.getTime() - 1000 * 60 * 60 * 24 * 7;
 		for (Record re:list) {
-			if (re.getDate().getTime() - current.getTime() < seven) 
+			long day = (current.getTime()-re.getDate().getTime())/(1000*60*60*24);
+			if ( day< 7) 
 				sublist.add(re);
 		}
 		return sublist;
